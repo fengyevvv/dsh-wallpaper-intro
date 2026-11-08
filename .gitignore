@@ -16,3 +16,7 @@ Thumbs.db
 # 生成出来的测试页（内容含临时 token）
 tests/injection.html
 
+
+# npm pack 产物
+*.tgz
+
