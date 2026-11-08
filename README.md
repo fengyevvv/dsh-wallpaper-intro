@@ -61,10 +61,13 @@
 ## 安装
 
 ```sh
-# 从 GitHub（推荐）
+# 从 Release 安装（推荐，固定版本）
+dsh plugin --profile desktop add https://github.com/fengyevvv/dsh-wallpaper-intro/releases/latest/download/dsh-wallpaper-intro-0.1.0.tgz
+
+# 或跟随仓库最新
 dsh plugin --profile desktop add github:fengyevvv/dsh-wallpaper-intro
 
-# 或本地目录（开发时）
+# 本地目录（开发时）
 dsh plugin --profile desktop add link:E:\path\to\dsh-wallpaper-intro
 ```
 
