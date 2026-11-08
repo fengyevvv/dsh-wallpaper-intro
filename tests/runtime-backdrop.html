@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>runtime backdrop test</title>
+<style>
+  /* 模拟 DSH：body 用内核 token，表面不透明 —— 看运行时改 token 后壁纸能不能透出来 */
+  html, body { margin: 0; height: 100%; }
+  body {
+    --dsw-alias-bg-base: #ffffff;
+    --dsw-specific-sidebar-fill: #f7f7f8;
+    background: var(--dsw-alias-bg-base);
+    font-family: "Microsoft YaHei UI", sans-serif;
+    color: #16161a;
+  }
+  #app { display: flex; height: 100%; }
+  .side {
+    width: 240px;
+    background: var(--dsw-specific-sidebar-fill);
+    padding: 18px;
+    font-size: 13px;
+    border-right: 1px solid rgba(0,0,0,0.08);
+  }
+  .main { flex: 1; padding: 28px 36px; }
+  .bubble {
+    display: inline-block; padding: 10px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.72); border: 1px solid rgba(0,0,0,0.08);
+    font-size: 13.5px; line-height: 1.7;
+  }
+</style>
+<link rel="stylesheet" href="../runtime.css">
+</head>
+<body>
+<div id="app">
+  <aside class="side">侧栏 · 会话列表</aside>
+  <main class="main">
+    <div class="bubble">正文气泡：壁纸应该从这里透出来，但不能影响可读性。</div>
+  </main>
+</div>
+<script>
+window.__WPS_CFG__ = {
+  version: '0.1.0',
+  base: '/dsh-wallpaper-intro',
+  boot: { enabled: false },
+  bootUrl: '',
+  bootKind: 'video',
+  bgUrl: '__WPS_BG_URL__',
+  bgKind: 'video',
+  appearance: { veil: 0.14, surface: 0.2, surfaceLight: 0.55, blur: 0 },
+  autoYield: true
+};
+</script>
+<script src="../runtime.js"></script>
+</body>
+</html>

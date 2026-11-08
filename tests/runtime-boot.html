@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>runtime boot test</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0d14; }
+  #app { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .hint { color: #8b93a7; font: 13px "Microsoft YaHei UI", sans-serif; }
+</style>
+<link rel="stylesheet" href="../runtime.css">
+</head>
+<body>
+<div id="app"><div class="hint">DSH 主体内容（片头播放时应该被盖住）</div></div>
+<script>
+window.__WPS_CFG__ = {
+  version: '0.1.0',
+  base: '/dsh-wallpaper-intro',
+  boot: { enabled: true, fadeMs: 900, sound: false, volume: 0.8, hint: '正在启动…', skipLabel: '点击画面跳过', soundLabel: '开启声音' },
+  bootUrl: '__WPS_BG_URL__',
+  bootKind: 'video',
+  appearance: { veil: 0.14, surface: 0.2, surfaceLight: 0.55, blur: 0 },
+  autoYield: true
+};
+</script>
+<script src="../runtime.js"></script>
+</body>
+</html>

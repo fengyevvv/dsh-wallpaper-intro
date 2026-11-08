@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>settings harness</title>
+<style>
+  html, body { margin: 0; background: #ffffff; font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif; }
+  #frame { width: 860px; padding: 22px 26px; box-sizing: border-box; }
+  #err { color: #dc2626; font-size: 13px; white-space: pre-wrap; padding: 20px; }
+</style>
+</head>
+<body>
+<div id="frame"><div id="root"></div></div>
+
+<script src="/vendor/react.development.js"></script>
+<script src="/vendor/react-dom.development.js"></script>
+<script>
+  window.__ModuleLoader__ = { load(def) { window.__DEF__ = def } }
+  window.__ERRORS__ = []
+  window.addEventListener('error', function (e) {
+    window.__ERRORS__.push(String(e.message || e.error))
+  })
+</script>
+<script src="/client.js"></script>
+<script>
+(function () {
+  var def = window.__DEF__
+  if (!def) { document.getElementById('root').innerHTML = '<div id="err">client.js 没有调用 __ModuleLoader__.load</div>'; return }
+
+  var mod
+  try {
+    mod = def.factory(function (name) {
+      if (name === 'react') return window.React
+      throw new Error('unknown module: ' + name)
+    })
+  } catch (e) {
+    document.getElementById('root').innerHTML = '<div id="err">factory 抛错：' + String(e && e.stack || e) + '</div>'
+    return
+  }
+
+  var captured = []
+  var ctx = {
+    slots: {
+      inject(key, cb) { cb() },
+      register(options, component) { captured.push({ options: options, component: component }); return function () {} },
+    },
+    remote: {},
+  }
+
+  try {
+    mod.apply(ctx)
+  } catch (e) {
+    document.getElementById('root').innerHTML = '<div id="err">apply() 抛错：' + String(e && e.stack || e) + '</div>'
+    return
+  }
+
+  var settings = null
+  var overlay = null
+  for (var i = 0; i < captured.length; i++) {
+    if (captured[i].options.name === 'settings.section') settings = captured[i]
+    if (captured[i].options.name === 'shell.overlay') overlay = captured[i]
+  }
+
+  if (!settings && !overlay) {
+    document.getElementById('root').innerHTML = '<div id="err">没有注册任何组件</div>'
+    return
+  }
+
+  document.title = 'settings harness · ' + (settings ? settings.options.id : '') + ' · overlay=' + (overlay ? 'yes' : 'no')
+
+  // 模拟宿主：包一层错误边界，渲染失败要看得见
+  var React = window.React
+  var h = React.createElement
+  class Boundary extends React.Component {
+    constructor(props) { super(props); this.state = { error: null } }
+    static getDerivedStateFromError(error) { return { error: error } }
+    render() {
+      if (this.state.error) {
+        return h('div', { id: 'err' }, '渲染崩溃：' + String(this.state.error && this.state.error.stack || this.state.error))
+      }
+      return this.props.children
+    }
+  }
+
+  try {
+    ReactDOM.render(
+      h(Boundary, null, settings ? h(settings.component, { close: function () {} }) : null),
+      document.getElementById('root'),
+    )
+  } catch (e) {
+    document.getElementById('root').innerHTML = '<div id="err">render 抛错：' + String(e && e.stack || e) + '</div>'
+  }
+
+  // 快捷面板是 position:fixed 的浮层，单独给一个容器渲染
+  if (overlay) {
+    try {
+      var overlayRoot = document.createElement('div')
+      overlayRoot.id = 'overlay-root'
+      document.body.appendChild(overlayRoot)
+      ReactDOM.render(h(Boundary, null, h(overlay.component, {})), overlayRoot)
+    } catch (e) {
+      console.error('overlay render failed', e)
+    }
+  }
+})()
+</script>
+</body>
+</html>

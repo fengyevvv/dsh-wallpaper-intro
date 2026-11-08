@@ -1,0 +1,18 @@
+# ä¾èµ–
+node_modules/
+
+# éªŒè¯è„šæ‰‹æ¶çš„äº§ç‰©ï¼ˆå¯éšæ—¶é‡æ–°ç”Ÿæˆï¼Œä¸è¿›ä»“åº“ï¼‰
+tests/out/
+tests/vendor/
+tests/edgeprofile*/
+tests/edgeprofile2/
+tests/edgeprofile3/
+
+# ç³»ç»Ÿ / ç¼–è¾‘å™¨
+.DS_Store
+Thumbs.db
+*.log
+
+# Éú³É³öÀ´µÄ²âÊÔÒ³£¨ÄÚÈİº¬ÁÙÊ± token£©
+tests/injection.html
+

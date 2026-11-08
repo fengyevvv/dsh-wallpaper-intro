@@ -1,0 +1,140 @@
+/* 壁纸与片头 · 注入到页面的样式
+ *
+ * 只有两件事：
+ *   1. #wps-backdrop —— 铺满视口的壁纸层，z-index:-1 落在所有在流内容之下
+ *   2. #wps-boot —— 启动片头覆盖层，z-index 顶到最高
+ * 让壁纸真正透出来靠改内核 token，见 html[data-wps="on"] 那段。
+ */
+
+#wps-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+#wps-backdrop > img,
+#wps-backdrop > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  /* 模糊只作用在壁纸本身，不碰文字。
+     blur=0 时用 none 而不是 blur(0px)：后者会给全屏视频建立一层滤镜，
+     拖动时反复重建滤镜层会出现闪黑。 */
+  filter: var(--wps-filter, none);
+  /* 放大只用来盖住模糊溢出的边缘，量随模糊连续变化（原来是 blur>0 就固定放大 6%，
+     从 0px 到 1px 会突然一跳）。blur=0 时不建 transform。 */
+  transform: var(--wps-transform, none);
+}
+
+#wps-backdrop-veil {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / var(--wps-veil, 0.14));
+}
+
+/* 让壁纸透出来：只改「画布」和「侧栏」两处表面。
+   抬起来的表面（对话框/菜单/设置页）刻意不动，否则背后滚动的正文会透进来。 */
+html[data-wps="on"] body {
+  --dsw-alias-bg-base: var(--wps-base) !important;
+  --dsw-specific-sidebar-fill: var(--wps-sidebar) !important;
+}
+
+/* ---------- 启动片头 ---------- */
+#wps-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  background: #05070f;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity var(--wps-boot-fade, 900ms) ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+#wps-boot[data-wps-fading="1"] {
+  opacity: 0;
+}
+
+#wps-boot > img,
+#wps-boot > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  background: #05070f;
+}
+
+#wps-boot-hint {
+  position: absolute;
+  left: 20px;
+  bottom: 44px;
+  font: 12px/1.6 "Microsoft YaHei UI", "Segoe UI", system-ui, sans-serif;
+  color: rgb(255 255 255 / 0.62);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
+  pointer-events: none;
+}
+
+#wps-boot-bar {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 28px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.16);
+  overflow: hidden;
+}
+
+#wps-boot-bar > i {
+  display: block;
+  height: 100%;
+  width: 32%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #6b8cff, #8ad0ff);
+  animation: wps-boot-run 1.8s ease-in-out infinite;
+}
+
+@keyframes wps-boot-run {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(420%); }
+}
+
+#wps-boot-skip {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.42);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  color: rgb(255 255 255 / 0.86);
+  font: 11.5px/1 "Microsoft YaHei UI", "Segoe UI", system-ui, sans-serif;
+  pointer-events: none;
+}
+
+#wps-boot-sound {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.42);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  color: rgb(255 255 255 / 0.9);
+  font: 11.5px/1 "Microsoft YaHei UI", "Segoe UI", system-ui, sans-serif;
+  cursor: pointer;
+}
+
+#wps-boot-sound[hidden] {
+  display: none;
+}

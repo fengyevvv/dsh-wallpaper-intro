@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>runtime theme-flip test</title>
+<link rel="stylesheet" href="/runtime.css">
+<script>
+// 模拟深色主题的 DSH：body 底色是深色，且带不透明 alpha
+window.__WPS_CFG__ = {
+  version: '0.1.0',
+  base: '/dsh-wallpaper-intro',
+  boot: { enabled: false },
+  bootUrl: '',
+  bootKind: 'video',
+  bgUrl: '__WPS_BG_URL__',
+  bgKind: 'video',
+  bgEnabled: true,
+  appearance: { veil: 0.14, surface: 0.82, surfaceLight: 0.55, blur: 0 },
+  autoYield: true
+};
+</script>
+<script src="/runtime.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; }
+  body {
+    --dsw-alias-bg-base: #15161a;
+    --dsw-specific-sidebar-fill: #101114;
+    background: var(--dsw-alias-bg-base);
+    color: #e9eaee;
+    font-family: "Microsoft YaHei UI", sans-serif;
+  }
+  .wrap { padding: 40px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">深色主题下的页面：拖动「画布不透明度」跨过 50% 时，底色不应该翻转。</div>
+</body>
+</html>

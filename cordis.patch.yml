@@ -1,0 +1,8 @@
+# 壁纸与片头（dsh-wallpaper-intro）
+#
+# bundle patch：只 insert 一行，不写 config。
+# 所有可调项都在 $DSH_HOME/dsh-wallpaper-intro.json 里，由设置页写入；
+# 背景改完刷新页面即生效，片头参数改完要完全重启 DSH（注入行是启动快照）。
+- insert:
+    - id: wallpaper-intro
+      name: 'dsh-wallpaper-intro'

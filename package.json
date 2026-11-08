@@ -1,0 +1,63 @@
+{
+  "name": "dsh-wallpaper-intro",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Wallpapers and startup intro for DSH: a local image or video, or a Wallpaper Engine video wallpaper, behind the interface — plus a customizable intro clip at startup.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "wallpaper",
+    "wallpaper-engine",
+    "video-background",
+    "boot-animation",
+    "splash"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "runtime.js",
+    "runtime.css",
+    "lib/config.js",
+    "lib/media.js",
+    "lib/we.js",
+    "lib/bootstrap.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "ROADMAP.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.2.0-rc.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fengyevvv/dsh-wallpaper-intro.git"
+  },
+  "homepage": "https://github.com/fengyevvv/dsh-wallpaper-intro#readme",
+  "bugs": {
+    "url": "https://github.com/fengyevvv/dsh-wallpaper-intro/issues"
+  }
+}
